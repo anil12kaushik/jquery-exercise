@@ -1,0 +1,44 @@
+<html>
+<head>
+<style type="text/css">
+div.stack
+{
+border:1px solid #ededed;
+height:200px;
+width:400px;
+float:left;
+overflow:scroll;
+}
+button{
+float:left;
+height:50px;
+width:100px;
+}
+p
+{
+width:400px;
+height:40px;
+background-color:#bcbcbc;
+}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+$('document').ready(function(){
+$('button').live("click", function(){
+var $p = ("<p>paragraph</p>")
+$stack = $('div.stack').prepend($p);
+});
+$('p:first').live("click",function(){
+$(this).remove();
+});
+$('p:not(first)').live("click",function(){
+$(this).css('background-color','red');
+});
+});
+</script>
+</head>
+<body>
+<div class="stack"></div>
+<button>add something</button>
+</body>
+</html>
