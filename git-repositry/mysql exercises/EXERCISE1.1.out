@@ -1,0 +1,152 @@
+mysql> SELECT * FROM TASTES;
++-------+---------+
+| NAMES | FILLING |
++-------+---------+
+| Brown | Turkey  |
+| Brown | Beef    |
+| Brown | Ham     |
+| Jones | Cheese  |
+| Green | Beef    |
+| Green | Turkey  |
+| Green | Cheese  |
++-------+---------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM SANDWICHES;
++----------+-------+---------+-------+
+| LOCATION | BREAD | FILLING | PRICE |
++----------+-------+---------+-------+
+| Lincoln  | Rye   | Ham     |  1.25 |
+| Oneills  | White | Cheese  |   1.2 |
+| Oneills  | Whole | Ham     |  1.25 |
+| Oldnag   | Rye   | Beef    |  1.35 |
+| Buttery  | White | Cheese  |     1 |
+| Oneills  | White | Turkey  |  1.35 |
+| Buttery  | White | Ham     |   1.1 |
+| Buttery  | White | Ham     |   1.1 |
+| Lincoln  | Rye   | Beef    |  1.35 |
+| Lincoln  | White | Ham     |   1.3 |
+| Oldnag   | Rye   | Ham     |   1.4 |
++----------+-------+---------+-------+
+11 rows in set (0.00 sec)
+
+mysql> SELECT * FROM LOCATIONS;
++---------+---------+--------------+
+| LNAME   | PHONE   | ADDRESS      |
++---------+---------+--------------+
+| Lincoln | 6834523 | Lincolnplace |
+| Oneills | 6742134 | pearsest     |
+| Oldnag  | 7678132 | Damest       |
+| Buttery | 7023421 | Collegest    |
++---------+---------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT ADDRESS FROM LOCATIONS WHERE LNAME IN (SELECT LOCATION FROM SANDWICHES WHERE FILLING IN (SELECT FILLING FROM TASTES WHERE NAMES = 'Jones'));
++-----------+
+| ADDRESS   |
++-----------+
+| pearsest  |
+| Collegest |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT LOCATIONS.ADDRESS FROM LOCATIONS, SANDWICHES, TASTES WHERE  TASTES.NAMES = 'Jones' AND LOCATIONS.LNAME = SANDWICHES.LOCATION AND SANDWICHES.FILLING = TASTES.FILLING;
++-----------+
+| ADDRESS   |
++-----------+
+| pearsest  |
+| Collegest |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT LOCATIONS.ADDRESS, COUNT(DISTINCT TASTES.NAMES) FROM TASTES, SANDWICHES, LOCATIONS WHERE LOCATIONS.LNAME = SANDWICHES.LOCATION AND SANDWICHES.FILLING = TASTES.FILLING GROUP BY LOCATIONS.ADDRESS;
++--------------+------------------------------+
+| ADDRESS      | COUNT(DISTINCT TASTES.NAMES) |
++--------------+------------------------------+
+| Collegest    |                            3 |
+| Damest       |                            2 |
+| Lincolnplace |                            2 |
+| pearsest     |                            3 |
++--------------+------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> \t
+mysql> SELECT * FROM BRANCH;
++-------+---------------+---------------+
+| BCODE | LIBRARIAN     | ADDRESS       |
++-------+---------------+---------------+
+| B1    | John Smith    | 2 Anglesea Rd |
+| B2    | Mary jones    | 34 Pearse St  |
+| B3    | Francis Owens | Grange X      |
++-------+---------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM HOLDINGS;
++--------+-----------+--------+
+| BRANCH | TITLE     | COPIES |
++--------+-----------+--------+
+| B1     | Susannah  |      3 |
+| B1     | How to    |      2 |
+| B1     | A hist    |      1 |
+| B2     | How to    |      4 |
+| B2     | Computers |      2 |
+| B2     | The Wife  |      3 |
+| B3     | A hist    |      1 |
+| B3     | Computers |      4 |
+| B3     | Susannah  |      3 |
+| B3     | The Wife  |      1 |
++--------+-----------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM TITLES;
++---------------------+---------------+------------+
+| TITLE               | AUTHOR        | PUBLISHER  |
++---------------------+---------------+------------+
+| Susannah            | Ann Brown     | Macmillan  |
+| How to Fish         | Amy fly       | Stop Press |
+| A History of Dublin | David Little  | Wiley      |
+| Computers           | Blaise Pascal | Applewoods |
+| The Wife            | Ann Brown     | Macmillan  |
++---------------------+---------------+------------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT TITLE FROM TITLES WHERE PUBLISHER = 'Macmillan';
++----------+
+| TITLE    |
++----------+
+| Susannah |
+| The Wife |
++----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT BRANCH FROM HOLDINGS WHERE TITLE IN (SELECT TITLE FROM TITLES  WHERE AUTHOR = 'Ann Brown');
++--------+
+| BRANCH |
++--------+
+| B1     |
+| B2     |
+| B3     |
++--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT BRANCH FROM HOLDINGS, TITLES  WHERE HOLDINGS.TITLE = TITLES.TITLE AND TITLES.AUTHOR = 'Ann Brown';
++--------+
+| BRANCH |
++--------+
+| B1     |
+| B2     |
+| B3     |
++--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT BRANCH, SUM(COPIES) FROM HOLDINGS GROUP BY BRANCH;
++--------+-------------+
+| BRANCH | SUM(COPIES) |
++--------+-------------+
+| B1     |           6 |
+| B2     |           9 |
+| B3     |           9 |
++--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> \t;
