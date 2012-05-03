@@ -1,0 +1,13 @@
+//command to create a back-up named "Blogdbbackup.sql" of "Blogwriting" database
+
+mysqldump -u root -p Blogwriting > Blogdbbackup.sql
+
+//now to restore the backup sql file create a database named "restored"
+
+CREATE DATABASE restored;
+
+//command to restore the backup file "Blogdbbackup.sql" into databased named "restored"
+
+mysql -u root -p restored < Blogdbbackup.sql
+
+
